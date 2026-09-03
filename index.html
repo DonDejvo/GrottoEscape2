@@ -1,99 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <h1>Grotto Escape II</h1>
     <p>2D platformer game written in C++. Work in progress!</p>
     <h2>Controls</h3>
-    <table border="1">
-        <tr>
-            <th>Control name</th>
-            <th>Mobile</th>
-            <th>PC</th>
-        </tr>
-        <tr>
-            <th>Menu</th>
-        </tr>
-        <tr>
-            <td>Navigation</td>
-            <td>D-Pad</td>
-            <td>WASD</td>
-        </tr>
-        <tr>
-            <td>Enter selected item</td>
-            <td>B</td>
-            <td>K / Enter</td>
-        </tr>
-        <tr>
-            <td>Exit password menu</td>
-            <td>Start</td>
-            <td>Backspace</td>
-        </tr>
-        <tr>
-            <th>Level</th>
-        </tr>
-        <tr>
-            <td>Pause / Resume</td>
-            <td>Start</td>
-            <td>Backspace</td>
-        </tr>
-        <tr>
-            <td>Switch player</td>
-            <td>L / R</td>
-            <td>Left / Right control</td>
-        </tr>
-        <tr>
-            <td>Movement</td>
-            <td>D-Pad</td>
-            <td>WASD</td>
-        </tr>
-        <tr>
-            <td>Primary ability</td>
-            <td>B</td>
-            <td>K / Enter</td>
-        </tr>
-        <tr>
-            <td>Secondary ability</td>
-            <td>Y</td>
-            <td>J</td>
-        </tr>
-        <tr>
-            <td>Interact</td>
-            <td>A</td>
-            <td>L</td>
-        </tr>
-        <tr>
-            <th>Inventory</th>
-        </tr>
-        <tr>
-            <td>Use item</td>
-            <td>X</td>
-            <td>I</td>
-        </tr>
-        <tr>
-            <td>Select item</td>
-            <td>Select + D-Pad</td>
-            <td>Tab + WASD</td>
-        </tr>
-        <tr>
-            <td>Transfer item</td>
-            <td>B (on selected item) + D-Pad</td>
-            <td>K (on selected item) + WASD</td>
-        </tr>
-    </table>
-    <h2>Level passwords</h2>
-    <ul>
-        <li>LVL1</li>
-        <li>LVL2</li>
-    </ul>
-    <p>Live preview of web builds for testers:</p>
-    <ul>
-        <li><a href="gles/grotto_escape.html">GLES</a></li>
-        <li><a href="webgpu/grotto_escape.html">WebGPU</a></li>
-    </ul>
+        <table border="1">
+            <tr>
+                <th>Control name</th>
+                <th>Mobile</th>
+                <th>PC</th>
+            </tr>
+            <tr>
+                <th>Menu</th>
+            </tr>
+            <tr>
+                <td>Navigation</td>
+                <td>D-Pad</td>
+                <td>WASD</td>
+            </tr>
+            <tr>
+                <td>Enter selected item</td>
+                <td>B</td>
+                <td>K / Enter</td>
+            </tr>
+            <tr>
+                <td>Exit password menu</td>
+                <td>Start</td>
+                <td>Backspace</td>
+            </tr>
+            <tr>
+                <th>Level</th>
+            </tr>
+            <tr>
+                <td>Pause / Resume</td>
+                <td>Start</td>
+                <td>Backspace</td>
+            </tr>
+            <tr>
+                <td>Switch player</td>
+                <td>L / R</td>
+                <td>Left / Right control</td>
+            </tr>
+            <tr>
+                <td>Movement</td>
+                <td>D-Pad</td>
+                <td>WASD</td>
+            </tr>
+            <tr>
+                <td>Primary ability</td>
+                <td>B</td>
+                <td>K / Enter</td>
+            </tr>
+            <tr>
+                <td>Secondary ability</td>
+                <td>Y</td>
+                <td>J</td>
+            </tr>
+            <tr>
+                <td>Interact</td>
+                <td>A</td>
+                <td>L</td>
+            </tr>
+            <tr>
+                <th>Inventory</th>
+            </tr>
+            <tr>
+                <td>Use item</td>
+                <td>X</td>
+                <td>I</td>
+            </tr>
+            <tr>
+                <td>Select item</td>
+                <td>Select + D-Pad</td>
+                <td>Tab + WASD</td>
+            </tr>
+            <tr>
+                <td>Transfer item</td>
+                <td>B (on selected item) + D-Pad</td>
+                <td>K (on selected item) + WASD</td>
+            </tr>
+        </table>
+        <h2>Players</h2>
+        <h3>Ralph</h3>
+        <p>Ralph is player number one who wears yellow suit.</p>
+        <h4>Jump (primary)</h4>
+        <p>Ralph can jump only when touching the ground. The jumping height increases depending on the movement speed at
+            the moment of the jump off.</p>
+        <h4>Wall break (secondary)</h4>
+        <p>If there is breakable wall right in front of Ralph when activates this ability, it breaks. Ralph cant move
+            while using this ability.</p>
+        <h3>Gregory</h3>
+        <p>Gregory is player number two who wears blue suit.</p>
+        <h4>Levitation (primary)</h4>
+        <p>Gregory can switch to levitation mode if he is not climbing ledder nor using other ability. While in the levitation mode Gregory falling speed is decreased but his movement acceleration and decceleration is also decreased.</p>
+        <h4>Plasma bullet (secondary)</h4>
+        <p>Gregory can shoot plasma bullet while touching the ground and not in the levitation mode. The bullet deals 1 damage or can activate interactable objects by hit. Gregory cant move while using this ability.</p>
+        <h2>Level passwords</h2>
+        <ul>
+            <li>LVL1</li>
+            <li>LVL2</li>
+        </ul>
+        <p>Live preview of web builds for testers:</p>
+        <ul>
+            <li><a href="gles/grotto_escape.html">GLES</a></li>
+            <li><a href="webgpu/grotto_escape.html">WebGPU</a></li>
+        </ul>
 </body>
+
 </html>
