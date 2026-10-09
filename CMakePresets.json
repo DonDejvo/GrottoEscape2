@@ -1,0 +1,88 @@
+﻿{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "windows-base",
+            "description": "Umožňuje cílit na Windows s vývojovým prostředím Visual Studio.",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "x64-debug",
+            "displayName": "x64 Debug",
+            "description": "Cílí na Windows (64bitová verze) s vývojovým prostředím Visual Studio. (Debug)",
+            "inherits": "windows-base",
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+        },
+        {
+            "name": "x64-release",
+            "displayName": "x64 Release",
+            "description": "Cílí na Windows (64bitová verze) s vývojovým prostředím Visual Studio. (RelWithDebInfo)",
+            "inherits": "x64-debug",
+            "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+        },
+        {
+            "name": "x86-debug",
+            "displayName": "x86 Debug",
+            "description": "Cílí na Windows (32bitová verze) s vývojovým prostředím Visual Studio. (Debug)",
+            "inherits": "windows-base",
+            "architecture": {
+                "value": "x86",
+                "strategy": "external"
+            },
+            "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+        },
+        {
+            "name": "x86-release",
+            "displayName": "x86 Release",
+            "description": "Cílí na Windows (32bitová verze) s vývojovým prostředím Visual Studio. (RelWithDebInfo)",
+            "inherits": "x86-debug",
+            "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+        },
+        {
+            "name": "emscripten-base",
+            "description": "Cílí na web pomocí Emscripten toolchainu.",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-web/${presetName}",
+            "toolchainFile": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "intelliSenseMode": "windows-clang-x64"
+                }
+            }
+        },
+        {
+            "name": "web-webgpu",
+            "displayName": "Web WebGPU",
+            "description": "Cílí na web (Emscripten) s WebGPU backendem.",
+            "inherits": "emscripten-base",
+            "cacheVariables": { "USE_GLES": "OFF" }
+        },
+        {
+            "name": "web-gles",
+            "displayName": "Web GLES",
+            "description": "Cílí na web (Emscripten) s OpenGL ES backendem.",
+            "inherits": "emscripten-base",
+            "cacheVariables": { "USE_GLES": "ON" }
+        }
+    ]
+}

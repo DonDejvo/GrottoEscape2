@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+    <title>Grotto Escape 2</title>
+    <style>
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            touch-action: none;
+            overscroll-behavior: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            background: #000;
+        }
+
+        #game-wrapper {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            image-rendering: pixelated;
+            display: block;
+        }
+
+        #fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(4px);
+            color: #fff;
+            font-size: 16px;
+            z-index: 30;
+        }
+
+            #fullscreen-btn.hidden {
+                display: none;
+            }
+
+        #controls-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            display: none;
+        }
+
+        @media (pointer: coarse) {
+            #controls-overlay {
+                display: block;
+            }
+        }
+
+        .ctrl-btn {
+            position: absolute;
+            pointer-events: auto;
+            touch-action: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            backdrop-filter: blur(4px);
+            color: rgba(255,255,255,0.85);
+            font-family: sans-serif;
+            font-weight: 600;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: background 80ms ease-out, border-color 80ms ease-out;
+        }
+
+            .ctrl-btn.active,
+            .dpad-arrow.active {
+                background: radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.2) 75%);
+                border-color: rgba(255,255,255,0.5);
+            }
+
+        .shoulder-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 14px;
+            bottom: 184px;
+        }
+
+        #btn-l {
+            left: 16px;
+            border-radius: 50% 0 0 50%;
+        }
+
+        #btn-r {
+            right: 16px;
+            border-radius: 0 50% 50% 0;
+        }
+
+        .small-btn {
+            width: 56px;
+            height: 24px;
+            border-radius: 12px;
+            font-size: 9.5px;
+            letter-spacing: 0.5px;
+            bottom: 252px;
+        }
+
+        #btn-select {
+            left: 16px;
+            
+        }
+
+        #btn-start {
+            right: 16px;
+        }
+
+        #dpad {
+            position: absolute;
+            left: 80px;
+            bottom: 40px;
+            width: 140px;
+            height: 140px;
+            pointer-events: none;
+        }
+
+        .dpad-arrow {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            pointer-events: auto;
+            touch-action: none;
+            background: rgba(255,255,255,0.16);
+            transition: background 80ms ease-out, border-color 80ms ease-out;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 55%, 50% 95%, 0% 55%);
+            transform-origin: bottom center;
+        }
+
+        #dpad-up {
+            transform: rotate(0);
+        }
+
+        #dpad-down {
+            transform: rotate(180deg);
+        }
+
+        #dpad-left {
+            transform: rotate(-90deg);
+        }
+
+        #dpad-right {
+            transform: rotate(90deg);
+        }
+
+        #face-buttons {
+            position: absolute;
+            right: 4px;
+            bottom: 4px;
+            width: 190px;
+            height: 190px;
+            pointer-events: none;
+        }
+
+        .face-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            font-size: 16px;
+        }
+
+        #btn-x {
+            top: 0;
+            left: 67px;
+        }
+
+        #btn-y {
+            top: 67px;
+            left: 0;
+        }
+
+        #btn-a {
+            top: 67px;
+            left: 134px;
+        }
+
+        #btn-b {
+            top: 134px;
+            left: 67px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-wrapper">
+        <div id="canvas-container">
+            <canvas id="canvas" width="640" height="480"></canvas>
+        </div>
+
+        <div id="controls-overlay">
+
+            <div class="ctrl-btn shoulder-btn" id="btn-l" data-name="L">L</div>
+            <div class="ctrl-btn shoulder-btn" id="btn-r" data-name="R">R</div>
+
+            <div class="ctrl-btn small-btn" id="btn-select" data-name="SELECT">SELECT</div>
+            <div class="ctrl-btn small-btn" id="btn-start" data-name="START">START</div>
+
+            <div id="dpad">
+                <div class="dpad-arrow" id="dpad-up" data-dir="up"></div>
+                <div class="dpad-arrow" id="dpad-left" data-dir="left"></div>
+                <div class="dpad-arrow" id="dpad-right" data-dir="right"></div>
+                <div class="dpad-arrow" id="dpad-down" data-dir="down"></div>
+            </div>
+
+            <div id="face-buttons">
+                <div class="ctrl-btn face-btn" id="btn-x" data-name="X">X</div>
+                <div class="ctrl-btn face-btn" id="btn-y" data-name="Y">Y</div>
+                <div class="ctrl-btn face-btn" id="btn-a" data-name="A">A</div>
+                <div class="ctrl-btn face-btn" id="btn-b" data-name="B">B</div>
+            </div>
+
+        </div>
+
+        <button id="fullscreen-btn">⛶</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        canvas.oncontextmenu = (e) => e.preventDefault();
+
+        var Module = {
+            canvas,
+
+            print(...args) {
+                console.log(...args);
+            },
+
+            printErr(...args) {
+                console.error(...args);
+            },
+
+            totalDependencies: 0,
+
+            monitorRunDependencies(left) {
+                this.totalDependencies = Math.max(
+                    this.totalDependencies,
+                    left
+                );
+            }
+        };
+    </script>
+
+    {{{ SCRIPT }}}
+
+    #if MODULARIZE && !EXPORT_ES6
+    <script type="text/javascript">
+      {{{ EXPORT_NAME }}}(Module).then((mod) => { Module = mod; });
+    </script>
+    #endif
+
+    <script>
+        (function () {
+            const GAME_W = 640;
+            const GAME_H = 480;
+            const ASPECT = GAME_W / GAME_H;
+
+            const container = document.getElementById('canvas-container');
+
+            function resizeCanvas() {
+                const availW = container.clientWidth;
+                const availH = container.clientHeight;
+
+                let cssW, cssH;
+                if (availW / availH > ASPECT) {
+                    cssH = availH;
+                    cssW = cssH * ASPECT;
+                } else {
+                    cssW = availW;
+                    cssH = cssW / ASPECT;
+                }
+
+                canvas.style.width = cssW + 'px';
+                canvas.style.height = cssH + 'px';
+                canvas.style.marginLeft = ((availW - cssW) / 2) + 'px';
+            }
+
+            const resizeObserver = new ResizeObserver(() => resizeCanvas());
+            resizeObserver.observe(container);
+
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', resizeCanvas);
+            } else {
+                window.addEventListener('resize', resizeCanvas);
+            }
+            window.addEventListener('orientationchange', () => {
+                setTimeout(resizeCanvas, 100);
+            });
+
+            const canvasWatcher = new MutationObserver(() => {
+                if (canvas.style.width === '') {
+                    resizeCanvas();
+                }
+            });
+            canvasWatcher.observe(canvas, { attributes: true, attributeFilter: ['style', 'width', 'height'] });
+
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('selectstart', e => e.preventDefault());
+            document.addEventListener('gesturestart', e => e.preventDefault());
+            document.addEventListener('gesturechange', e => e.preventDefault());
+            document.addEventListener('gestureend', e => e.preventDefault());
+            document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', e => {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) e.preventDefault();
+                lastTouchEnd = now;
+            }, { passive: false });
+
+            const wrapper = document.getElementById('game-wrapper');
+            const fsBtn = document.getElementById('fullscreen-btn');
+
+            function isFullscreen() {
+                return !!(document.fullscreenElement || document.webkitFullscreenElement);
+            }
+            function onFullscreenChange() {
+                fsBtn.classList.toggle('hidden', isFullscreen());
+                fsBtn.disabled = isFullscreen();
+                resizeCanvas();
+            }
+
+            fsBtn.addEventListener('click', () => {
+                if (!isFullscreen()) {
+                    (wrapper.requestFullscreen || wrapper.webkitRequestFullscreen).call(wrapper);
+                }
+            });
+
+            document.addEventListener('fullscreenchange', onFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+
+
+            const Button = {
+                DPAD_LEFT: 0,
+                DPAD_UP: 1,
+                DPAD_RIGHT: 2,
+                DPAD_DOWN: 3,
+                BUTTON_A: 4,
+                BUTTON_B: 5,
+                BUTTON_X: 6,
+                BUTTON_Y: 7,
+                BUTTON_LEFT: 8,
+                BUTTON_RIGHT: 9,
+                BUTTON_START: 10,
+                BUTTON_SELECT: 11,
+            };
+
+            const NAME_TO_BUTTON = {
+                L: Button.BUTTON_LEFT,
+                R: Button.BUTTON_RIGHT,
+                A: Button.BUTTON_A,
+                B: Button.BUTTON_B,
+                X: Button.BUTTON_X,
+                Y: Button.BUTTON_Y,
+                START: Button.BUTTON_START,
+                SELECT: Button.BUTTON_SELECT,
+            };
+
+            const DIR_TO_BUTTON = {
+                up: Button.DPAD_UP,
+                down: Button.DPAD_DOWN,
+                left: Button.DPAD_LEFT,
+                right: Button.DPAD_RIGHT,
+            };
+
+            let inputSetPressed = null;
+
+            function bindInputWhenReady() {
+                if (typeof Module._InputSetPressed === 'function') {
+                    inputSetPressed = Module._InputSetPressed;
+                    resizeCanvas();
+                    return;
+                }
+                setTimeout(bindInputWhenReady, 50);
+            }
+
+            if (Module.onRuntimeInitialized !== undefined) {
+                const prevOnRuntimeInitialized = Module.onRuntimeInitialized;
+                Module.onRuntimeInitialized = () => {
+                    prevOnRuntimeInitialized();
+                    bindInputWhenReady();
+                };
+            } else {
+                Module.onRuntimeInitialized = bindInputWhenReady;
+            }
+
+            function setButtonPressed(buttonEnum, pressed) {
+                if (buttonEnum === undefined || !inputSetPressed) return;
+                inputSetPressed(buttonEnum, pressed ? 1 : 0);
+            }
+
+            function onButtonPress(name) {
+                setButtonPressed(NAME_TO_BUTTON[name], true);
+            }
+            function onButtonRelease(name) {
+                setButtonPressed(NAME_TO_BUTTON[name], false);
+            }
+
+            function onDpadDirection(dir) {
+                setButtonPressed(DIR_TO_BUTTON[dir], true);
+            }
+            function onDpadRelease(dir) {
+                setButtonPressed(DIR_TO_BUTTON[dir], false);
+            }
+
+            const overlay = document.getElementById('controls-overlay');
+
+            const pointers = new Map();
+
+            function controlFromPoint(clientX, clientY) {
+                const el = document.elementFromPoint(clientX, clientY);
+                if (!el) return null;
+
+                const btn = el.closest('.ctrl-btn');
+                if (btn) {
+                    return { kind: 'button', name: btn.dataset.name, el: btn };
+                }
+
+                const arrow = el.closest('.dpad-arrow');
+                if (arrow) {
+                    return { kind: 'dpad', dir: arrow.dataset.dir, el: arrow };
+                }
+
+                return null;
+            }
+
+            function activate(control) {
+                control.el.classList.add('active');
+                if (control.kind === 'button') onButtonPress(control.name);
+                else onDpadDirection(control.dir);
+            }
+
+            function deactivate(control) {
+                control.el.classList.remove('active');
+                if (control.kind === 'button') onButtonRelease(control.name);
+                else onDpadRelease(control.dir);
+            }
+
+            function sameControl(a, b) {
+                if (!a || !b) return a === b;
+                return a.kind === b.kind && a.el === b.el;
+            }
+
+            overlay.addEventListener('pointerdown', e => {
+                e.preventDefault();
+
+                const control = controlFromPoint(e.clientX, e.clientY);
+                if (!control) return;
+
+                try {
+                    overlay.setPointerCapture(e.pointerId);
+                } catch (err) {
+                    console.error('setPointerCapture failed:', err);
+                }
+                pointers.set(e.pointerId, control);
+                activate(control);
+            });
+
+            overlay.addEventListener('pointermove', e => {
+                e.preventDefault();
+
+                const prev = pointers.get(e.pointerId);
+                const next = controlFromPoint(e.clientX, e.clientY);
+
+                if (!sameControl(prev, next)) {
+                    if (prev) deactivate(prev);
+                    if (next) activate(next);
+                    pointers.set(e.pointerId, next);
+                }
+            });
+
+            function handlePointerEnd(e) {
+                e.preventDefault();
+
+                if (!pointers.has(e.pointerId)) return;
+                const control = pointers.get(e.pointerId);
+                if (control) deactivate(control);
+                pointers.delete(e.pointerId);
+            }
+
+            overlay.addEventListener('pointerup', handlePointerEnd);
+            overlay.addEventListener('pointercancel', handlePointerEnd);
+
+        })();
+    </script>
+</body>
+</html>

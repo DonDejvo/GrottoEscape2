@@ -1,0 +1,3 @@
+LVL1 map2.tmj LVL2
+LVL2 map3.tmj LVL1
+TST0 map1.tmj -

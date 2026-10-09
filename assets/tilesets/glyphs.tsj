@@ -1,0 +1,14 @@
+{ "columns":16,
+ "image":"..\/textures\/glyphs.png",
+ "imageheight":128,
+ "imagewidth":128,
+ "margin":0,
+ "name":"glyphs",
+ "spacing":0,
+ "tilecount":256,
+ "tiledversion":"2025.11.12",
+ "tileheight":8,
+ "tilewidth":8,
+ "type":"tileset",
+ "version":"1.10"
+}

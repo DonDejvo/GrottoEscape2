@@ -1,0 +1,14 @@
+{ "columns":4,
+ "image":"..\/textures\/items.png",
+ "imageheight":32,
+ "imagewidth":32,
+ "margin":0,
+ "name":"items",
+ "spacing":0,
+ "tilecount":16,
+ "tiledversion":"2025.11.12",
+ "tileheight":8,
+ "tilewidth":8,
+ "type":"tileset",
+ "version":"1.10"
+}
