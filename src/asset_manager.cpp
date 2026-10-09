@@ -62,7 +62,7 @@ std::vector<char> AssetManager::Load(const std::string& path) const {
     std::ifstream ifs(filename, std::ios::binary | std::ios::ate);
 
     if (!ifs.is_open()) {
-        throw AssetLoadException("Could not load asset: " + path);
+        throw AssetNotFoundException("Could not load asset: " + path);
     }
 
     std::ifstream::pos_type pos = ifs.tellg();
