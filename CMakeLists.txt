@@ -10,43 +10,7 @@ else()
     set(USE_GLES OFF)  # native is always WebGPU
 endif()
 
-set(COMMON_SOURCES
-    "grotto_escape.cpp" 
-    "window.h" 
-    "window.cpp"
-    "renderer.h"
-    "renderer.cpp"
-    "asset_manager.h"
-    "asset_manager.cpp" 
-    "entity.h" 
-    "entity.cpp"
-    "sprite.h" 
-    "sprite.cpp" 
-    "tilemap.h" 
-    "tilemap.cpp"
-    "game_state.h"
-    "game_state.cpp" 
-    "asset_archive.h" 
-    "input.h" 
-    "input.cpp"
-    "engine.h" 
-    "engine.cpp" 
-    "emc_export.cpp" 
-    "backend.h" 
-    "backend.cpp"
-    "ui.h"
-    "ui.cpp"
-    "constants.h" 
-    "text_analyzer.h" 
-    "text_analyzer.cpp")
-
-if(USE_GLES)
-    list(APPEND COMMON_SOURCES "gles_backend.h" "gles_backend.cpp")
-else()
-    list(APPEND COMMON_SOURCES "webgpu_backend.h" "webgpu_backend.cpp")
-endif()
-
-add_executable(grotto_escape ${COMMON_SOURCES})
+add_executable(grotto_escape)
 
 if(USE_GLES)
     target_compile_definitions(grotto_escape PRIVATE BACKEND_GLES)
@@ -55,10 +19,10 @@ else()
 endif()
 
 if (NOT EMSCRIPTEN)
-    add_executable(asset_packer
-        "asset_packer.cpp"
-        "asset_archive.h")
+    add_executable(asset_packer)
 endif()
+
+add_subdirectory(src)
 
 if(NOT USE_GLES)
     set(DAWN_FETCH_DEPENDENCIES ON)

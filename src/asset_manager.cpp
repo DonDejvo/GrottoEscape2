@@ -3,7 +3,7 @@
 #include <fstream>
 #include <filesystem>
 
-AssetLoadException::AssetLoadException(const std::string& msg) 
+AssetNotFoundException::AssetNotFoundException(const std::string& msg) 
     : std::runtime_error(msg)
 {
 }
@@ -16,7 +16,7 @@ void AssetManager::Init() {
     mArchiveInputStream.open(archivePath, std::ios::binary);
 
     if (!mArchiveInputStream.is_open()) {
-        throw AssetLoadException("Could not open archive: " + archivePath);
+        throw AssetNotFoundException("Could not open archive: " + archivePath);
     }
 
     int32_t entryCount = 0;
@@ -36,7 +36,7 @@ std::vector<char> AssetManager::Load(const std::string& path) const {
     auto it = mIndex.find(path);
 
     if (it == mIndex.end()) {
-        throw AssetLoadException("Could not load asset: " + path);
+        throw AssetNotFoundException("Could not load asset: " + path);
     }
 
     const ArchiveEntry& entry = it->second;

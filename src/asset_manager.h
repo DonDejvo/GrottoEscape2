@@ -10,9 +10,9 @@
 #define USE_ARCHIVE
 #endif
 
-class AssetLoadException : public std::runtime_error {
+class AssetNotFoundException : public std::runtime_error {
 public:
-    explicit AssetLoadException(const std::string& msg);
+    explicit AssetNotFoundException(const std::string& msg);
 };
 
 class AssetManager {

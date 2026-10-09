@@ -461,7 +461,7 @@ bool GameState::LoadLevel(const std::string& password)
 
         return true;
     }
-    catch (const AssetLoadException& e) {
+    catch (const AssetNotFoundException& e) {
         passwordInput.message = "INVALID TILEMAP PATH";
     }
 
