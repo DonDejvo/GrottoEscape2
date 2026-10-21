@@ -1,28 +1,67 @@
 name: Deploy web build
+
 on:
   push:
     branches: [main]
+  workflow_dispatch:        # lets you run it manually from the Actions tab
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: mymindstorm/setup-emsdk@v14
-      - name: Build
+
+      # 1. Pack assets natively (no Dawn, no game code)
+      - name: Build asset packer
         run: |
-          emcmake cmake -B build-web
-          cmake --build build-web
+          cmake --preset tools
+          cmake --build build-native --target asset_packer
+
+      - name: Run asset packer
+        run: |
+          mkdir -p data
+          ./build-native/tools/asset_packer/asset_packer assets data/game.dat
+          ls -l data/game.dat
+
+      # 2. Web build with Emscripten
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest          # pin a version once you know one works
+          actions-cache-folder: emsdk-cache
+
+      - name: Build web (GLES)
+        run: |
+          echo "EMSDK=$EMSDK"
+          cmake --preset web-gles
+          cmake --build build-web/web-gles
+
+      # 3. Collect only what the site needs
+      - name: Collect site files
+        run: |
+          ls build-web/web-gles/src
+          mkdir dist
+          cd build-web/web-gles/src
+          cp index.html index.js index.wasm index.data ../../../dist/
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: build-web   # folder containing index.html
+          path: dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/deploy-pages@v4
+      - id: deployment
+        uses: actions/deploy-pages@v4
