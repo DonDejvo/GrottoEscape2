@@ -8,9 +8,9 @@
 #include <glm/vec3.hpp>
 #include <glm/ext.hpp>
 #if defined(BACKEND_GLES)
-#include "gles_backend.h"
+#include <backend/gles/gles_backend.h>
 #else
-#include "webgpu_backend.h"
+#include <backend/webgpu/webgpu_backend.h>
 #endif
 #include "constants.h"
 #include "text_analyzer.h"

@@ -83,6 +83,16 @@
             "description": "Cílí na web (Emscripten) s OpenGL ES backendem.",
             "inherits": "emscripten-base",
             "cacheVariables": { "USE_GLES": "ON" }
+        },
+        {
+            "name": "tools",
+            "displayName": "Tools only (asset packer)",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-native",
+            "cacheVariables": {
+                "BUILD_GAME": "OFF",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         }
     ]
 }

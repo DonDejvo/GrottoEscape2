@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <vector>
 #include <fstream>
-#include "asset_archive.h"
+#include <assets/asset_archive.h>
 
 namespace fs = std::filesystem;
 

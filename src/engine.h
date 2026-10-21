@@ -4,7 +4,7 @@
 #include "renderer.h"
 #include "game_state.h"
 #include "input.h"
-#include "asset_manager.h"
+#include <assets/asset_manager.h>
 #include <memory>
 
 class Engine {

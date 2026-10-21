@@ -1,6 +1,6 @@
 #pragma once
 
-#include "backend.h"
+#include <backend/backend.h>
 
 #include <webgpu/webgpu_cpp.h>
 #include <string>
