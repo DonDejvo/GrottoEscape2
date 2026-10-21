@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 const size_t MAX_PATH_LEN = 128;
 
 struct ArchiveEntry {
