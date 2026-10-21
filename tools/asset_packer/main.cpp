@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <assets/asset_archive.h>
+#include <cstring>
 
 namespace fs = std::filesystem;
 
